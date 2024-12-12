@@ -34,4 +34,6 @@ namespace constants {
 		{2, "South"},
 		{3, "East"}
 	};
-}; 
+};
+
+static bool randomWeightedBoolean(double weight);

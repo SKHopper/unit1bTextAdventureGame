@@ -133,9 +133,10 @@
     <ClCompile Include="DungeonRoom.cpp" />
     <ClCompile Include="DungeonSave.cpp" />
     <ClCompile Include="unit1bGame.cpp" />
+    <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="constants.h" />
+    <ClInclude Include="utilities.h" />
     <ClInclude Include="DoorWall.h" />
     <ClInclude Include="Dungeon.h" />
     <ClInclude Include="DungeonRoom.h" />
