@@ -2,12 +2,18 @@
 
 #include <iostream>
 
-#include "Dungeon.h"
+#include "utilities.h"
+#include "DoorWall.h"
+
+struct DungeonRoomSave {
+	std::vector<DoorWall> sides;
+	//more content
+};
 
 class DungeonRoom {
-	DungeonSave roomSave;
+	DungeonRoomSave roomSave;
 public:
 	DungeonRoom();
-	void Generate(DungeonSave save);
+	void Generate(DungeonRoomSave save);
 	void exposit();
 };

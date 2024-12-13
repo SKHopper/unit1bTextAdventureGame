@@ -131,7 +131,6 @@
     <ClCompile Include="DoorWall.cpp" />
     <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="DungeonRoom.cpp" />
-    <ClCompile Include="DungeonSave.cpp" />
     <ClCompile Include="unit1bGame.cpp" />
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
@@ -140,7 +139,6 @@
     <ClInclude Include="DoorWall.h" />
     <ClInclude Include="Dungeon.h" />
     <ClInclude Include="DungeonRoom.h" />
-    <ClInclude Include="DungeonSave.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

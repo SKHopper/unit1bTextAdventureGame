@@ -2,8 +2,10 @@
 
 #include <iostream>
 #include <map>
+#include <random>
 
-using std::map, std::string;
+
+using std::map, std::vector, std::string, std::cout, std::cin, std::endl;
 
 namespace constants {
 	const enum DOOR_TYPE {
@@ -21,19 +23,20 @@ namespace constants {
 		east = 3
 	};
 
-	map<int, string> DOOR_TYPE_DISPLAY_NAME{
-		{0, "Wooden"},
-		{1, "Chisled Stone"},
-		{2, "Ancient Ornate Steel"},
-		{3, "[come up with a name for a special material for unique mechanics]"}
+	const map<DOOR_TYPE, string> DOOR_TYPE_DISPLAY_NAME = {
+		{wood, "Wooden"},
+		{stone, "Chisled Stone"},
+		{steel, "Ancient Ornate Steel"},
+		{special, "[come up with a name for a special material for unique mechanics]"}
 	};
 
-	map<int, string> DIRECTION_DISPLAY_NAME{
+	const map<int, string> DIRECTION_DISPLAY_NAME = {
 		{0, "North"},
-		{1, "West"},
+		{1, "West "},
 		{2, "South"},
-		{3, "East"}
+		{3, "East "}
 	};
 };
 
-static bool randomWeightedBoolean(double weight);
+//true if 0<=random float<=1 greater than weight
+bool randomWeightedBoolean(double weight);

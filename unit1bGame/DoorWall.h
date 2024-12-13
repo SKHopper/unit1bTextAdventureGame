@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utilities.h";
+#include "utilities.h"
 
 class DoorWall {
 	bool isGenerated = false;
