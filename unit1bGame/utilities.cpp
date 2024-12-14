@@ -32,3 +32,8 @@ bivarInt getDirectionDisplacement(constants::DIRECTION direction) {
     }
     return displacement;
 }
+
+void resetInput() {
+    cin.clear();
+    cin.ignore(256, '\n');
+}

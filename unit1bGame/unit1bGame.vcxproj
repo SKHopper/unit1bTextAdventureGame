@@ -135,6 +135,7 @@
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="player.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="DoorWall.h" />
     <ClInclude Include="Dungeon.h" />

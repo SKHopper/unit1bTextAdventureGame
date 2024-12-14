@@ -19,13 +19,13 @@ namespace constants {
 		{wood, "Wooden"},
 		{stone, "Chisled Stone"},
 		{steel, "Ancient Ornate Steel"},
-		{special, "[come up with a name for a special material for unique mechanics]"}
+		{special, "[placeholder name special]"}
 	};
 
 	/*
-	*	 north+
-	* west-  east+
-	*	 south-
+	*****north+
+	**west-  east+
+	****south-
 	*/
 	const enum DIRECTION {
 		north = 0,
@@ -59,3 +59,4 @@ bool randomWeightedBoolean(double weight);
 bool equateBivariateIntegers(bivarInt a, bivarInt b);
 bivarInt sumBivariateIntegers(bivarInt a, bivarInt b);
 bivarInt getDirectionDisplacement(constants::DIRECTION direction);
+void resetInput();

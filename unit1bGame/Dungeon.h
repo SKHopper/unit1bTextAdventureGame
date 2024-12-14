@@ -18,8 +18,11 @@ public:
 	Dungeon();
 	void makeRoom(DungeonRoomSave knownRoomData, bivarInt coordinate);
 	void makeStartRoom();
+	
+	bivarInt getPlayerCoordinate();
 	vector<roomMapPoint> getRoomMap();
 	int getRoomIndex(bivarInt coordinate);
+	DungeonRoom& getRoom(bivarInt coordinate);
 	vector<DoorWall> getAdjacentSides(bivarInt coordinate);
 	void traverse(constants::DIRECTION direction);
 };

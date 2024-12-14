@@ -13,7 +13,7 @@ DoorWall& DungeonRoom::getSide(constants::DIRECTION direction){
 void DungeonRoom::Generate(DungeonRoomSave save){
 	for (DoorWall& Rside : save.sides) {
 		if (not Rside.getIsGenerated()) {
-			Rside.generate(/*randomWeightedBoolean(0.7)*/1, static_cast<constants::DOOR_TYPE>(rand() % 4));
+			Rside.generate(randomWeightedBoolean(0.7), static_cast<constants::DOOR_TYPE>(rand() % 4));
 		}
 	}
 	roomSave = save;
