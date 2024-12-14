@@ -9,8 +9,10 @@ static void loop() {
 int main(){
     //new seed per execute
     srand(time(0));
-    Dungeon mainDungeon;
-    DungeonRoom testRoom = mainDungeon.makeStartRoom();
-    testRoom.exposit();
+    Dungeon playerDungeon;
+    playerDungeon.makeStartRoom();
+    playerDungeon.getRoomMap().at(0).room.exposit();
+    playerDungeon.traverse(constants::north); 
+    playerDungeon.getRoomMap().at(1).room.exposit(); 
     loop();
 }

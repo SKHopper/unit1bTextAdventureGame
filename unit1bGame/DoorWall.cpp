@@ -43,10 +43,12 @@ bool DoorWall::tryUnlock(constants::DOOR_TYPE keyType) {
 }
 
 void DoorWall::generate(bool newHasDoor, constants::DOOR_TYPE newType){
-    isGenerated = true;
-    wallHasDoor = newHasDoor;
-    if (wallHasDoor) {
-        type = newType;
-        isUnlocked = type == constants::wood;
+    if (not isGenerated) {
+        isGenerated = true;
+        wallHasDoor = newHasDoor;
+        if (wallHasDoor) {
+            type = newType;
+            isUnlocked = type == constants::wood;
+        }
     }
 }

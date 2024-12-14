@@ -4,7 +4,6 @@
 #include <map>
 #include <random>
 
-
 using std::map, std::vector, std::string, std::cout, std::cin, std::endl;
 
 namespace constants {
@@ -16,13 +15,6 @@ namespace constants {
 		special = 3
 	};
 
-	const enum DIRECTION {
-		north = 0,
-		west = 1,
-		south = 2,
-		east = 3
-	};
-
 	const map<DOOR_TYPE, string> DOOR_TYPE_DISPLAY_NAME = {
 		{wood, "Wooden"},
 		{stone, "Chisled Stone"},
@@ -30,13 +22,40 @@ namespace constants {
 		{special, "[come up with a name for a special material for unique mechanics]"}
 	};
 
-	const map<int, string> DIRECTION_DISPLAY_NAME = {
-		{0, "North"},
-		{1, "West "},
-		{2, "South"},
-		{3, "East "}
+	/*
+	*	 north+
+	* west-  east+
+	*	 south-
+	*/
+	const enum DIRECTION {
+		north = 0,
+		east = 1,
+		south = 2,
+		west = 3
 	};
+
+	const map<DIRECTION, string> DIRECTION_DISPLAY_NAME = {
+		{north, "North"},
+		{east, "East "},
+		{south, "South"},
+		{west, "West "}
+	};
+	
+	const map<DIRECTION, DIRECTION> DIRECTION_OPPOSITE = {
+		{north, south},
+		{east, west},
+		{south, north},
+		{west, east}
+	};
+};
+
+struct bivarInt {
+	int x;
+	int y;
 };
 
 //true if 0<=random float<=1 greater than weight
 bool randomWeightedBoolean(double weight);
+bool equateBivariateIntegers(bivarInt a, bivarInt b);
+bivarInt sumBivariateIntegers(bivarInt a, bivarInt b);
+bivarInt getDirectionDisplacement(constants::DIRECTION direction);

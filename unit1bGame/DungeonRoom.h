@@ -14,6 +14,7 @@ class DungeonRoom {
 	DungeonRoomSave roomSave;
 public:
 	DungeonRoom();
+	DoorWall& getSide(constants::DIRECTION direction);
 	void Generate(DungeonRoomSave save);
 	void exposit();
 };
