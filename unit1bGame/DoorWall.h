@@ -5,7 +5,7 @@
 class DoorWall {
 	bool isGenerated = false;
 	bool wallHasDoor = false;
-	constants::DOOR_TYPE type = constants::nullType;
+	constants::DOOR_TYPE type = constants::nullDoorType;
 	bool isUnlocked = false;
 public:
 	void generate(bool newHasDoor, constants::DOOR_TYPE newType);

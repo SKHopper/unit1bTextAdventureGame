@@ -12,6 +12,15 @@ bivarInt sumBivariateIntegers(bivarInt a, bivarInt b) {
     return { a.x + b.x, a.y + b.y };
 }
 
+void displayBivariateIntegers(bivarInt integers) {
+    cout
+        << endl
+        << integers.x
+        << ", "
+        << integers.y
+        << endl;
+}
+
 bivarInt getDirectionDisplacement(constants::DIRECTION direction) {
     bivarInt displacement{};
     switch (direction) {

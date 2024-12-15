@@ -62,8 +62,15 @@ vector<DoorWall> Dungeon::getAdjacentSides(bivarInt coordinate){ //TODO MAYBE: c
 
 //uuuuuuuuuuuhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
 void Dungeon::traverse(constants::DIRECTION direction) {
+    displayBivariateIntegers(playerCoordinate);//test
+    getRoom(playerCoordinate).getSide(direction).setIsUnlocked(true);
     playerCoordinate = sumBivariateIntegers(playerCoordinate, getDirectionDisplacement(direction));
+    displayBivariateIntegers(playerCoordinate);//test
     if (getRoomIndex(playerCoordinate) == -1) {
         makeRoom({ getAdjacentSides(playerCoordinate) }, playerCoordinate);
     }
+    else {
+        getRoom(playerCoordinate).getSide(constants::DIRECTION_OPPOSITE.at(direction)).setIsUnlocked(true);
+    }
+    displayBivariateIntegers(playerCoordinate);//test
 }

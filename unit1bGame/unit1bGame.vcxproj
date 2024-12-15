@@ -131,11 +131,16 @@
     <ClCompile Include="DoorWall.cpp" />
     <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="DungeonRoom.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Key.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="unit1bGame.cpp" />
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="player.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="Key.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="DoorWall.h" />
     <ClInclude Include="Dungeon.h" />

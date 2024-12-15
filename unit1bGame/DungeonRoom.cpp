@@ -34,11 +34,10 @@ void DungeonRoom::exposit() {
 			sideDisplayName = "a Wall";
 		}
 		cout
-			<< ((i) ? "on the " : "On the ")
+			<< ((i) ? "to the " : "To the ")
 			<< constants::DIRECTION_DISPLAY_NAME.at(sideDirection) 
-			<< ((i) ? "" : " side of the room")
 			<< " there is "
 			<< sideDisplayName
-			<< endl;
+			<< ((i == 3) ? "." : ",\n");
 	}
 }
