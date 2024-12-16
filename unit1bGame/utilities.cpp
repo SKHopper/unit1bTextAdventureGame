@@ -21,6 +21,10 @@ void displayBivariateIntegers(bivarInt integers) {
         << endl;
 }
 
+void clearTerminal() {
+    system("cls");
+}
+
 bivarInt getDirectionDisplacement(constants::DIRECTION direction) {
     bivarInt displacement{};
     switch (direction) {

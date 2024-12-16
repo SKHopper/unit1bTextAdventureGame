@@ -80,3 +80,4 @@ bivarInt sumBivariateIntegers(bivarInt a, bivarInt b);
 void displayBivariateIntegers(bivarInt integers);
 bivarInt getDirectionDisplacement(constants::DIRECTION direction);
 void resetInput();
+void clearTerminal();

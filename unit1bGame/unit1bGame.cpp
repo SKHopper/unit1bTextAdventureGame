@@ -5,7 +5,6 @@
 
 void displayRoomMenu(Dungeon playerDungeon, Player playerCharacter) {
     DungeonRoom playerRoom = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate());
-    displayBivariateIntegers(playerDungeon.getPlayerCoordinate());//test
     playerRoom.exposit();
     cout << endl;
     playerCharacter.exposite();
@@ -25,6 +24,7 @@ void displayRoomMenu(Dungeon playerDungeon, Player playerCharacter) {
 }
 
 int getPlayerInput(int highestPlayerChoice) {
+    highestPlayerChoice++;
     cout << "Your choice:";
     int playerInput;
     cin >> playerInput;
@@ -32,7 +32,7 @@ int getPlayerInput(int highestPlayerChoice) {
         resetInput();
         playerInput = getPlayerInput(highestPlayerChoice);
     }
-    return playerInput;
+    return playerInput - 1;
 }
 
 void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int playerChoice) {
@@ -60,8 +60,8 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
 
 void playerAct(Dungeon& playerDungeon, Player& playerCharacter) {
     DungeonRoom& playerRoom = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate());
-    int playerChoice = getPlayerInput(4);
-    if (playerChoice < 4) {
+    int playerChoice = getPlayerInput(3);
+    if (playerChoice <= 3) {
         playerTryEntreDoor(playerDungeon, playerCharacter, playerChoice);
     }
 }
