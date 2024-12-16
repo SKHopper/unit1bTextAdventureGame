@@ -44,6 +44,23 @@ bivarInt getDirectionDisplacement(constants::DIRECTION direction) {
     return displacement;
 }
 
+int selectFromOddsTable(vector<bivarInt> table) {
+    int oddsSum = 0;
+    for (bivarInt& tableElem : table) {
+        oddsSum += tableElem.y;
+    }
+    int selector = rand() % oddsSum;
+    oddsSum = 0;
+    for (bivarInt& tableElem : table) {
+        oddsSum += tableElem.y;
+        if (oddsSum >= selector) {
+            selector = tableElem.x;
+            break;
+        }
+    }
+    return selector;
+}
+
 void resetInput() {
     cin.clear();
     cin.ignore(256, '\n');

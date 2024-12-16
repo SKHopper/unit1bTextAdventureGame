@@ -18,6 +18,12 @@ using std::map, std::vector, std::string, std::cout, std::cin, std::endl;
 * Derived derived = *static_cast<Key*>(&base)
 */
 
+//{x, y}
+struct bivarInt {
+	int x;
+	int y;
+};
+
 namespace constants {
 	//for both doors and associated keys, -1
 	const enum DOOR_TYPE {
@@ -72,11 +78,25 @@ namespace constants {
 		placeholder1 = 1,
 		placeholder2 = 2,
 	};
-};
 
-struct bivarInt {
-	int x;
-	int y;
+	const vector<bivarInt> DOOR_TYPE_ODDS = {
+		{wood, 12},
+		{stone, 6},
+		{steel, 3},
+		{special, 1}
+	};
+
+	const vector<bivarInt> KEY_TYPE_ODDS = {
+		{stone, 6},
+		{steel, 3},
+		{special, 1}
+	};
+
+	const vector<bivarInt> ITEM_TYPE_ODDS = {
+		{key, 6},
+		{placeholder1, 0},
+		{placeholder2, 0}
+	};
 };
 
 //true if (0<=random float<=1) greater than weight
@@ -89,5 +109,8 @@ bivarInt sumBivariateIntegers(bivarInt a, bivarInt b);
 void displayBivariateIntegers(bivarInt integers);
 //gets the unit integer vector of cardinal directions
 bivarInt getDirectionDisplacement(constants::DIRECTION direction);
+//for returning random enumerated type key from table based on relative odds
+int selectFromOddsTable(vector<bivarInt> table);
+
 void resetInput();
 void clearTerminal();

@@ -13,7 +13,7 @@ DoorWall& DungeonRoom::getSide(constants::DIRECTION direction){
 void DungeonRoom::Generate(DungeonRoomSave save){
 	for (DoorWall& Rside : save.sides) {
 		if (not Rside.getIsGenerated()) {
-			Rside.generate(randomWeightedBoolean(0.7), static_cast<constants::DOOR_TYPE>(rand() % 4));
+			Rside.generate(randomWeightedBoolean(0.3), static_cast<constants::DOOR_TYPE>(selectFromOddsTable(constants::DOOR_TYPE_ODDS)));
 		}
 	}
 	roomSave = save;
@@ -25,7 +25,7 @@ void DungeonRoom::exposit() {
 		DoorWall tempSide = roomSave.sides.at(i);
 		string sideDisplayName;
 		if (tempSide.getWallHasDoor()) {
-			sideDisplayName = (tempSide.getIsUnlocked()) ? "an Unlocked" : "a Locked";
+			sideDisplayName = (tempSide.getIsUnlocked()) ? "an Unsealed" : "a Sealed";
 			sideDisplayName += " ";
 			sideDisplayName += constants::DOOR_TYPE_DISPLAY_NAME.at(tempSide.getType());
 			sideDisplayName += " Door";

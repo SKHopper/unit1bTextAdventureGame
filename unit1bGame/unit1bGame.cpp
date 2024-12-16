@@ -7,20 +7,21 @@ void displayRoomOptions(Player playerCharacter) {
     cout << "Entre door: ";
     for (int i = 0; i < 4; i++) {
         cout
-            << constants::DIRECTION_DISPLAY_NAME.at(static_cast<constants::DIRECTION>(i))
             << "["
             << i + 1
-            << "]";
+            << "]"
+            << constants::DIRECTION_DISPLAY_NAME.at(static_cast<constants::DIRECTION>(i));
         if (i != 3) {
             cout << ", ";
         }
     }
     cout << endl;
+    cout << endl;
 }
 
 int getPlayerInput(int highestPlayerChoice) {
     highestPlayerChoice++;
-    cout << "Your choice:";
+    cout << "Your choice: ";
     int playerInput;
     cin >> playerInput;
     if (cin.fail() || playerInput > highestPlayerChoice) {
@@ -42,8 +43,8 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
             if (keyProspect.getType() == constants::key) {
                 entreSuccess = side.tryUnlock((*static_cast<Key*>(&keyProspect)).getKeyType());
                 if (entreSuccess) {
+                    cout << "You used one " + keyProspect.getDisplayName() << ", \n";
                     inventory.erase(inventory.begin() + i);
-                    cout << "You used one " + keyProspect.getDisplayName() << endl;
                     break;
                 }
             }

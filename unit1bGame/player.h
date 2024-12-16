@@ -3,7 +3,8 @@
 #include "Key.h"
 
 class Player {
-	vector<Item> inventory;
+	Key testKey = Key(constants::stone);
+	vector<Item> inventory = {testKey};
 public:
 	//beware pass by ref
 	vector<Item>& getInventory();

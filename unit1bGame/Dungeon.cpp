@@ -53,8 +53,10 @@ vector<DoorWall> Dungeon::getAdjacentSides(bivarInt coordinate){ //TODO MAYBE: c
         sides.push_back(tempSide);
         bivarInt adjacentCoordinate = sumBivariateIntegers(coordinate, getDirectionDisplacement(direction));
         if (getRoomIndex(adjacentCoordinate) != -1) {
-            DoorWall& RtwinSide = getRoom(adjacentCoordinate).getSide(constants::DIRECTION_OPPOSITE.at(direction));
-            sides.at(i).generate(RtwinSide.getWallHasDoor(), RtwinSide.getType());
+            DoorWall& Rside = sides.at(i);
+            DoorWall& RtwinSide = getRoom(adjacentCoordinate).getSide(constants::DIRECTION_OPPOSITE.at(direction)); 
+            Rside.generate(RtwinSide.getWallHasDoor(), RtwinSide.getType());
+            Rside.setIsUnlocked(RtwinSide.getIsUnlocked());
         }
     }
     return sides;
