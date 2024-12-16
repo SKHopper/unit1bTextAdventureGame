@@ -50,7 +50,7 @@ vector<DoorWall> Dungeon::getAdjacentSides(bivarInt coordinate){ //TODO MAYBE: c
     DoorWall tempSide;
     for (int i = 0; i < 4; i++) {
         constants::DIRECTION direction = static_cast<constants::DIRECTION>(i);
-        sides.push_back(tempSide);//oh boy i sure hope this passes by copy
+        sides.push_back(tempSide);
         bivarInt adjacentCoordinate = sumBivariateIntegers(coordinate, getDirectionDisplacement(direction));
         if (getRoomIndex(adjacentCoordinate) != -1) {
             DoorWall& RtwinSide = getRoom(adjacentCoordinate).getSide(constants::DIRECTION_OPPOSITE.at(direction));
@@ -60,16 +60,16 @@ vector<DoorWall> Dungeon::getAdjacentSides(bivarInt coordinate){ //TODO MAYBE: c
     return sides;
 }
 
-//uuuuuuuuuuuhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
 void Dungeon::traverse(constants::DIRECTION direction) {
+    cout << "Headed " << constants::DIRECTION_DISPLAY_NAME.at(direction) << ", ";
     getRoom(playerCoordinate).getSide(direction).setIsUnlocked(true);
     playerCoordinate = sumBivariateIntegers(playerCoordinate, getDirectionDisplacement(direction));
-    if (getRoomIndex(playerCoordinate) == -1) {
+    if (getRoomIndex(playerCoordinate) == -1) {//if no room exists
         makeRoom({ getAdjacentSides(playerCoordinate) }, playerCoordinate);
-        cout << "You haven't been in this room before\n";
+        cout << "you haven't been in this chamber before.\n";
     }
-    else {
+    else {//unlock corresponding other side of door
         getRoom(playerCoordinate).getSide(constants::DIRECTION_OPPOSITE.at(direction)).setIsUnlocked(true);
-        cout << "You've been in this room before\n";
+        cout << "you've been in this chamber before.\n";
     }
 }

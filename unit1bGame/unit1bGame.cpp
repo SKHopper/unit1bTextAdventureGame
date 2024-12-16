@@ -3,13 +3,7 @@
 #include "Dungeon.h"
 #include "player.h"
 
-void displayRoomMenu(Dungeon playerDungeon, Player playerCharacter) {
-    DungeonRoom playerRoom = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate());
-    playerRoom.exposit();
-    cout << endl;
-    playerCharacter.exposite();
-    cout << endl;
-    cout << endl;
+void displayRoomOptions(Player playerCharacter) {
     cout << "Entre door: ";
     for (int i = 0; i < 4; i++) {
         cout
@@ -21,6 +15,7 @@ void displayRoomMenu(Dungeon playerDungeon, Player playerCharacter) {
             cout << ", ";
         }
     }
+    cout << endl;
 }
 
 int getPlayerInput(int highestPlayerChoice) {
@@ -36,12 +31,13 @@ int getPlayerInput(int highestPlayerChoice) {
 }
 
 void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int playerChoice) {
+    clearTerminal();
     constants::DIRECTION direction = static_cast<constants::DIRECTION>(playerChoice);
     DoorWall& side = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate()).getSide(direction);
     vector<Item>& inventory = playerCharacter.getInventory();
     bool entreSuccess = side.getIsUnlocked();
-    if (side.getWallHasDoor() && !entreSuccess) {
-        for (int i = 0; i < inventory.size(); i++) {//TODO: this shit is ass  
+    if (side.getWallHasDoor() && !entreSuccess) {//if wall is not just locked because no door
+        for (int i = 0; i < inventory.size(); i++) {
             Item& keyProspect = inventory.at(i);
             if (keyProspect.getType() == constants::key) {
                 entreSuccess = side.tryUnlock((*static_cast<Key*>(&keyProspect)).getKeyType());
@@ -56,6 +52,23 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
     if (entreSuccess) {
         playerDungeon.traverse(direction);
     }
+    else {
+        if (side.getWallHasDoor()) {
+            cout 
+                << "Your satchel does not contain the rune to open the " 
+                << constants::DIRECTION_DISPLAY_NAME.at(direction)
+                << " door";
+        }
+        else {
+            cout 
+                << "The wall to the "
+                << constants::DIRECTION_DISPLAY_NAME.at(direction)
+                << " is impassable";
+        }
+        cout 
+            << ", the path is blocked."
+            << endl;
+    }
 }
 
 void playerAct(Dungeon& playerDungeon, Player& playerCharacter) {
@@ -66,13 +79,23 @@ void playerAct(Dungeon& playerDungeon, Player& playerCharacter) {
     }
 }
 
+//call room and player to display refreshed info
+void exposite(Dungeon playerDungeon, Player playerCharacter) {
+    DungeonRoom playerRoom = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate());
+    playerRoom.exposit();
+    cout << endl;
+    playerCharacter.exposite();
+    cout << endl;
+    cout << endl;
+}
+
 void play() {
     Player playerCharacter;
     Dungeon playerDungeon;
     playerDungeon.makeStartRoom();
     while (true) {
-        displayRoomMenu(playerDungeon, playerCharacter);
-        cout << endl;
+        exposite(playerDungeon, playerCharacter);
+        displayRoomOptions(playerCharacter);
         playerAct(playerDungeon, playerCharacter);
     }
 }

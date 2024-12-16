@@ -19,6 +19,7 @@ using std::map, std::vector, std::string, std::cout, std::cin, std::endl;
 */
 
 namespace constants {
+	//for both doors and associated keys, -1
 	const enum DOOR_TYPE {
 		nullDoorType = -1,
 		wood = 0,
@@ -27,14 +28,17 @@ namespace constants {
 		special = 3
 	};
 
+	//for both doors and associated keys, excludes null type
 	const map<DOOR_TYPE, string> DOOR_TYPE_DISPLAY_NAME = {
 		{wood, "Wooden"},
-		{stone, "Chisled Stone"},
-		{steel, "Ancient Ornate Steel"},
+		{stone, "Enchanted Stone"},
+		{steel, "Ancient Engraved Steel"},
 		{special, "[placeholder name special]"}
 	};
 
 	/*
+	* cardinal
+	* 
 	*****north+
 	**west-  east+
 	****south-
@@ -46,11 +50,12 @@ namespace constants {
 		west = 3
 	};
 
+	//lowercase plaintext
 	const map<DIRECTION, string> DIRECTION_DISPLAY_NAME = {
-		{north, "North"},
-		{east, "East "},
-		{south, "South"},
-		{west, "West "}
+		{north, "north"},
+		{east, "east"},
+		{south, "south"},
+		{west, "west"}
 	};
 	
 	const map<DIRECTION, DIRECTION> DIRECTION_OPPOSITE = {
@@ -60,6 +65,7 @@ namespace constants {
 		{west, east}
 	};
 
+	//for discerning whether downward casting is possible, -1 for null type
 	const enum ITEM_TYPE {
 		nullItemType = -1,
 		key = 0,
@@ -73,11 +79,15 @@ struct bivarInt {
 	int y;
 };
 
-//true if 0<=random float<=1 greater than weight
+//true if (0<=random float<=1) greater than weight
 bool randomWeightedBoolean(double weight);
+//true if a.x == b.x && a.y = b.y
 bool equateBivariateIntegers(bivarInt a, bivarInt b);
+//displacement addition
 bivarInt sumBivariateIntegers(bivarInt a, bivarInt b);
+//"x, y"
 void displayBivariateIntegers(bivarInt integers);
+//gets the unit integer vector of cardinal directions
 bivarInt getDirectionDisplacement(constants::DIRECTION direction);
 void resetInput();
 void clearTerminal();

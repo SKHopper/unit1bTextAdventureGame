@@ -14,11 +14,9 @@ bivarInt sumBivariateIntegers(bivarInt a, bivarInt b) {
 
 void displayBivariateIntegers(bivarInt integers) {
     cout
-        << endl
         << integers.x
         << ", "
-        << integers.y
-        << endl;
+        << integers.y;
 }
 
 void clearTerminal() {

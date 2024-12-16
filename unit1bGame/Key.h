@@ -5,6 +5,6 @@
 class Key: public Item {
 	constants::DOOR_TYPE keyType;
 public:
-	Key(constants::DOOR_TYPE newKeyType) : keyType(newKeyType), Item(constants::key, constants::DOOR_TYPE_DISPLAY_NAME.at(newKeyType) + " Unlock Rune") {};
+	Key(constants::DOOR_TYPE newKeyType) : keyType(newKeyType), Item(constants::key, constants::DOOR_TYPE_DISPLAY_NAME.at(newKeyType) + " Unseal Rune") {};
 	constants::DOOR_TYPE getKeyType();
 };
