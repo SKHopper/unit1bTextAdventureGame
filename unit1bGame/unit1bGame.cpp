@@ -39,9 +39,9 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
     constants::DIRECTION direction = static_cast<constants::DIRECTION>(playerChoice);
     DoorWall& side = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate()).getSide(direction);
     vector<Item>& inventory = playerCharacter.getInventory();
-    bool entreSuccess = true;
-    if (not side.getIsUnlocked()) {
-        for (int i = 0; i < inventory.size(); i++) {//TODO: this shit is ass    
+    bool entreSuccess = side.getIsUnlocked();
+    if (side.getWallHasDoor() && !entreSuccess) {
+        for (int i = 0; i < inventory.size(); i++) {//TODO: this shit is ass  
             Item& keyProspect = inventory.at(i);
             if (keyProspect.getType() == constants::key) {
                 entreSuccess = side.tryUnlock((*static_cast<Key*>(&keyProspect)).getKeyType());
