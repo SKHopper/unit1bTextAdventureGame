@@ -2,6 +2,10 @@
 
 //Item::Item(constants::ITEM_TYPE newType, string newDisplayName) : 
 
+vector<int>& Item::getInstanceData() {
+    return instanceData;
+}
+
 constants::ITEM_TYPE Item::getType() {
     return type;
 }

@@ -23,6 +23,30 @@ void clearTerminal() {
     system("cls");
 }
 
+string specialNameGenerator(int length){
+    string name = "";
+    int startShifter = randomInteger(1);
+    for (int i = 0; i < length; i++) {
+        name.append(
+            ((startShifter) ? 1-(i % 2) : (i % 2)) 
+            ? constants::SPECIAL_CONSONANTS.at(randomInteger(constants::SPECIAL_CONSONANTS.size() - 1))
+            : constants::SPECIAL_VOWELS.at(randomInteger(constants::SPECIAL_VOWELS.size() - 1))
+        );
+    }
+    char start = toupper(name.at(0));
+    name.assign(name.begin()+1,name.end());
+    return start + name;
+}
+
+int linearStringSearch(vector<string> arr, string a) {
+    for (int i = 0; i < arr.size(); i++) {
+        if (a == arr.at(i)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 bivarInt getDirectionDisplacement(constants::DIRECTION direction) {
     bivarInt displacement{};
     switch (direction) {
@@ -63,5 +87,12 @@ int selectFromOddsTable(vector<bivarInt> table) {
 
 void resetInput() {
     cin.clear();
-    cin.ignore(256, '\n');
+    cin.ignore(1000, '\n');
+}
+
+int randomInteger(int max) {
+    std::random_device device;
+    std::mt19937 generator(device());
+    std::uniform_int_distribution<std::mt19937::result_type> distributor(0, max);
+    return distributor(generator);
 }

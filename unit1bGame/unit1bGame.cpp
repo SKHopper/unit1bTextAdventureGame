@@ -8,7 +8,7 @@ void displayRoomOptions(Player playerCharacter) {
     for (int i = 0; i < 4; i++) {
         cout
             << "["
-            << i + 1
+            << constants::CONTROLS_DISPLAY.at(i)
             << "]"
             << constants::DIRECTION_DISPLAY_NAME.at(static_cast<constants::DIRECTION>(i));
         if (i != 3) {
@@ -19,16 +19,17 @@ void displayRoomOptions(Player playerCharacter) {
     cout << endl;
 }
 
-int getPlayerInput(int highestPlayerChoice) {
-    highestPlayerChoice++;
+int getPlayerInput() {
     cout << "Your choice: ";
-    int playerInput;
-    cin >> playerInput;
-    if (cin.fail() || playerInput > highestPlayerChoice) {
-        resetInput();
-        playerInput = getPlayerInput(highestPlayerChoice);
+    string playerInput;
+    std::getline(cin, playerInput);
+    if (playerInput.size() == 1) {
+        playerInput = tolower(playerInput.at(0));
+        if (constants::CONTROLS.count(playerInput)) {
+            return constants::CONTROLS.at(playerInput);
+        }
     }
-    return playerInput - 1;
+    return getPlayerInput();
 }
 
 void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int playerChoice) {
@@ -39,11 +40,11 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
     bool entreSuccess = side.getIsUnlocked();
     if (side.getWallHasDoor() && !entreSuccess) {//if wall is not just locked because no door
         for (int i = 0; i < inventory.size(); i++) {
-            Item& keyProspect = inventory.at(i);
-            if (keyProspect.getType() == constants::key) {
-                entreSuccess = side.tryUnlock((*static_cast<Key*>(&keyProspect)).getKeyType());
+            Item& RkeyProspect = inventory.at(i); 
+            if (RkeyProspect.getType() == constants::key) {
+                entreSuccess = side.tryUnlock((*static_cast<Key*>(&RkeyProspect)).getKeyType());
                 if (entreSuccess) {
-                    cout << "You used one " + keyProspect.getDisplayName() << ", \n";
+                    cout << "You used one " + RkeyProspect.getDisplayName() << ", \n";
                     inventory.erase(inventory.begin() + i);
                     break;
                 }
@@ -74,8 +75,9 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
 
 void playerAct(Dungeon& playerDungeon, Player& playerCharacter) {
     DungeonRoom& playerRoom = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate());
-    int playerChoice = getPlayerInput(3);
-    if (playerChoice <= 3) {
+    int playerChoice = getPlayerInput();
+    clearTerminal();
+    if (playerChoice < 4) {
         playerTryEntreDoor(playerDungeon, playerCharacter, playerChoice);
     }
 }
@@ -87,6 +89,8 @@ void exposite(Dungeon playerDungeon, Player playerCharacter) {
     cout << endl;
     playerCharacter.exposite();
     cout << endl;
+    cout << endl;
+    playerDungeon.displayMap();
     cout << endl;
 }
 

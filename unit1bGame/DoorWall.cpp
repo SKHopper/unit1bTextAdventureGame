@@ -33,7 +33,7 @@ void DoorWall::setIsUnlocked(bool newValue) {
 }
 
 bool DoorWall::tryUnlock(constants::DOOR_TYPE keyType) {
-    if (keyType = type) {
+    if (keyType == type) {
         isUnlocked = true;
         return true;
     }

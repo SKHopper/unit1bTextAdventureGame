@@ -4,7 +4,8 @@
 
 class Player {
 	Key testKey = Key(constants::stone);
-	vector<Item> inventory = {testKey};
+	Key testKey2 = Key(constants::steel);
+	vector<Item> inventory = {testKey, testKey, testKey2};
 public:
 	//beware pass by ref
 	vector<Item>& getInventory();

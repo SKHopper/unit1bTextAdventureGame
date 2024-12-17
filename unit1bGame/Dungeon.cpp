@@ -12,11 +12,43 @@ vector<roomMapPoint> Dungeon::getRoomMap(){
     return roomMap;
 }
 
+void Dungeon::displayMap() {
+    for (int i = mapExtents.at(0); i >= mapExtents.at(2); i--) {
+        for (int j = mapExtents.at(1); j >= mapExtents.at(3); j--) {
+            if (equateBivariateIntegers(getPlayerCoordinate(), { j, i })) {
+                cout << "[+]";
+            }
+            else if (equateBivariateIntegers({ j, i }, { 0,0 })) {
+                cout << "[X]";
+            }
+            else if (getRoomIndex({ j, i }) != -1) {
+                cout << "[ ]";
+            }
+            else {
+                cout << " . ";
+            }
+        }
+        cout << endl;
+    }
+}
+
 void Dungeon::makeRoom(DungeonRoomSave knownRoomData, bivarInt coordinate) {
     DungeonRoom newRoom;
     DungeonRoom& RnewRoom = newRoom;
     RnewRoom.Generate(knownRoomData);
     roomMap.push_back({ RnewRoom, coordinate });
+    if (coordinate.y > mapExtents.at(0)) {
+        mapExtents.at(0) = coordinate.y;
+    } 
+    else if (coordinate.y < mapExtents.at(2)) {
+        mapExtents.at(2) = coordinate.y;
+    }
+    if (coordinate.x > mapExtents.at(1)) {
+        mapExtents.at(1) = coordinate.x;
+    }
+    else if (coordinate.x < mapExtents.at(3)) {
+        mapExtents.at(3) = coordinate.x;
+    }
 }
 
 //make new save with only wooden doors
@@ -74,4 +106,8 @@ void Dungeon::traverse(constants::DIRECTION direction) {
         getRoom(playerCoordinate).getSide(constants::DIRECTION_OPPOSITE.at(direction)).setIsUnlocked(true);
         cout << "you've been in this chamber before.\n";
     }
+}
+
+vector<int>& Dungeon::getMapExtents() {
+    return mapExtents;
 }

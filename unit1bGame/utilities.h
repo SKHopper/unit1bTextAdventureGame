@@ -3,11 +3,13 @@
 #include <iostream>
 #include <map>
 #include <random>
+#include <cctype>
+#include <string>
 
 using std::map, std::vector, std::string, std::cout, std::cin, std::endl;
 
 /*
-* DOWNWARD CASTING:
+* DOWNWARD CASTING - only allows polymorphic instance data but does allow nonpolymorphic functionality
 * 
 * Derived derived(constants::wood);
 * Base base = derived;
@@ -80,7 +82,7 @@ namespace constants {
 	};
 
 	const vector<bivarInt> DOOR_TYPE_ODDS = {
-		{wood, 12},
+		{wood, 15},
 		{stone, 6},
 		{steel, 3},
 		{special, 1}
@@ -97,10 +99,33 @@ namespace constants {
 		{placeholder1, 0},
 		{placeholder2, 0}
 	};
+
+	const vector<string> SPECIAL_VOWELS = {"e", "u", "i", "y"};
+	const vector<string> SPECIAL_CONSONANTS = { "r", "n", "t", "c" };
+
+	const map<string, int> CONTROLS = {
+		{"w", 0},
+		{"a", 1},
+		{"s", 2},
+		{"d", 3},
+		{"1", 4},
+		{"2", 5},
+		{"3", 6},
+		{"4", 7}
+	};
+
+	const map<int, string> CONTROLS_DISPLAY = {
+		{0, "w"},
+		{1, "a"},
+		{2, "s"},
+		{3, "d"},
+		{4, "1"},
+		{5, "2"},
+		{6, "3"},
+		{7, "4"}
+	};
 };
 
-//true if (0<=random float<=1) greater than weight
-bool randomWeightedBoolean(double weight);
 //true if a.x == b.x && a.y = b.y
 bool equateBivariateIntegers(bivarInt a, bivarInt b);
 //displacement addition
@@ -114,3 +139,10 @@ int selectFromOddsTable(vector<bivarInt> table);
 
 void resetInput();
 void clearTerminal();
+
+//true if (0<=random float<=1) greater than weight
+bool randomWeightedBoolean(double weight);
+int randomInteger(int max);
+string specialNameGenerator(int length);
+
+int linearStringSearch(vector<string> arr, string a);

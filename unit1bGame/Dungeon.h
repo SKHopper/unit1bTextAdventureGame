@@ -17,6 +17,8 @@ class Dungeon {
 	vector<roomMapPoint> roomMap;
 	//the indicies of the room the player is in on a hypothetical 2D array
 	bivarInt playerCoordinate;
+	//furthest distances in cardinal directions with active rooms
+	vector<int> mapExtents = {0, 0, 0, 0};
 public:
 	Dungeon();
 	//appends ref of new room to roomMap
@@ -26,6 +28,7 @@ public:
 	
 	bivarInt getPlayerCoordinate();	
 	vector<roomMapPoint> getRoomMap();
+	void displayMap();
 	int getRoomIndex(bivarInt coordinate);
 	//beware pass by ref
 	DungeonRoom& getRoom(bivarInt coordinate);
@@ -33,4 +36,6 @@ public:
 	vector<DoorWall> getAdjacentSides(bivarInt coordinate);
 	//moves player coordinate by direction's unit vector and creates new room if necessary
 	void traverse(constants::DIRECTION direction);
+	//beware pass by ref
+	vector<int>& getMapExtents();
 };
