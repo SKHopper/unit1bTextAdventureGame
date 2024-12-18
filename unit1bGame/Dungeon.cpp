@@ -32,11 +32,10 @@ void Dungeon::displayMap() {
     }
 }
 
-void Dungeon::makeRoom(DungeonRoomSave knownRoomData, bivarInt coordinate) {
+DungeonRoom Dungeon::makeRoom(DungeonRoomSave knownRoomData, bivarInt coordinate) {
     DungeonRoom newRoom;
-    DungeonRoom& RnewRoom = newRoom;
-    RnewRoom.Generate(knownRoomData);
-    roomMap.push_back({ RnewRoom, coordinate });
+    newRoom.Generate(knownRoomData);
+    roomMap.push_back({ newRoom, coordinate });
     if (coordinate.y > mapExtents.at(0)) {
         mapExtents.at(0) = coordinate.y;
     } 
@@ -49,11 +48,13 @@ void Dungeon::makeRoom(DungeonRoomSave knownRoomData, bivarInt coordinate) {
     else if (coordinate.x < mapExtents.at(3)) {
         mapExtents.at(3) = coordinate.x;
     }
+    return newRoom;
 }
 
 //make new save with only wooden doors
 void Dungeon::makeStartRoom(){
     DungeonRoomSave startSave;
+    startSave.encounterData.hasEncounter = false;
     for (int i = 0; i < 4; i++) {
         DoorWall tempSide = DoorWall();
         tempSide.generate(true, constants::wood);
@@ -94,18 +95,36 @@ vector<DoorWall> Dungeon::getAdjacentSides(bivarInt coordinate){ //TODO MAYBE: c
     return sides;
 }
 
-void Dungeon::traverse(constants::DIRECTION direction) {
+encounterSpawnData& Dungeon::traverse(constants::DIRECTION direction) {
+    DungeonRoom newRoom;
+    DungeonRoom& RnewRoom = newRoom;
     cout << "Headed " << constants::DIRECTION_DISPLAY_NAME.at(direction) << ", ";
     getRoom(playerCoordinate).getSide(direction).setIsUnlocked(true);
     playerCoordinate = sumBivariateIntegers(playerCoordinate, getDirectionDisplacement(direction));
     if (getRoomIndex(playerCoordinate) == -1) {//if no room exists
-        makeRoom({ getAdjacentSides(playerCoordinate) }, playerCoordinate);
+        bool hasEncounter = randomWeightedBoolean(0.85);
+        DungeonRoomSave newRoomSave = {
+            getAdjacentSides(playerCoordinate),
+            {
+                hasEncounter,
+                false,
+                {},
+                (hasEncounter) ? 
+                    static_cast<constants::ENCOUNTER_TYPE>(selectFromOddsTable(constants::ENCOUNTER_TYPE_ODDS)) 
+                :   constants::nullEncounterType
+            }
+        };
+        RnewRoom = makeRoom(newRoomSave, playerCoordinate);
         cout << "you haven't been in this chamber before.\n";
     }
     else {//unlock corresponding other side of door
-        getRoom(playerCoordinate).getSide(constants::DIRECTION_OPPOSITE.at(direction)).setIsUnlocked(true);
+        RnewRoom = getRoom(playerCoordinate);
+
+        cout << "4";
+        RnewRoom.getSide(constants::DIRECTION_OPPOSITE.at(direction)).setIsUnlocked(true);
         cout << "you've been in this chamber before.\n";
     }
+    return RnewRoom.getEncounter();
 }
 
 vector<int>& Dungeon::getMapExtents() {

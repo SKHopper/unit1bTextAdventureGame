@@ -2,15 +2,12 @@
 
 #include <iostream>
 
-#include "utilities.h"
 #include "DoorWall.h"
 
 //all generated data about a room to be saved 
 struct DungeonRoomSave {
 	std::vector<DoorWall> sides;
-	bool hasEncounter;
-	constants::ENCOUNTER_TYPE type;
-	int encounterLevel;
+	encounterSpawnData encounterData;
 };
 
 class DungeonRoom {
@@ -23,4 +20,5 @@ public:
 	void Generate(DungeonRoomSave save);
 	//displays state of each side
 	void exposit();
+	encounterSpawnData& getEncounter();
 };

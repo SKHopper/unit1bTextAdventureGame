@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utilities.h";
+#include "utilities.h"
 
 class Lifeform {
 	double maxHealth = 20;

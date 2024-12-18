@@ -12,13 +12,11 @@ using std::map, std::vector, std::string, std::cout, std::cin, std::endl;
 /*
 * DOWNWARD CASTING - only allows polymorphic instance data but does allow nonpolymorphic functionality
 * 
-* Derived derived(constants::wood);
-* Base base = derived;
-* Base* Pbase = &derived;
-* Derived* Pderived = static_cast<Derived*>(Pbase);
-* Derived retrievedDerived = *Pderived;
+* //implicit cast up
+* Base& Rbase = *new Derived();
 * 
-* Derived derived = *static_cast<Key*>(&base)
+* //explicit cast down
+* Derived& Rderived = *static_cast<Derived*>(&Rbase);
 */
 
 //{x, y}
@@ -30,7 +28,7 @@ struct bivarInt {
 struct encounterStats {
 	int level;
 
-	double health; 
+	double maxHealth; 
 	double lightAttackDmg; 
 	double heavyAttackDmg;
 	double heavyAttackChance;
@@ -49,6 +47,19 @@ namespace constants {
 		stone = 1,
 		steel = 2,
 		special = 3
+	};
+
+	const vector<bivarInt> DOOR_TYPE_ODDS = {
+		{wood, 15},
+		{stone, 6},
+		{steel, 3},
+		{special, 1}
+	};
+
+	const vector<bivarInt> KEY_TYPE_ODDS = {
+		{stone, 6},
+		{steel, 3},
+		{special, 1}
 	};
 
 	//for both doors and associated keys, excludes null type
@@ -96,19 +107,6 @@ namespace constants {
 		placeholder2 = 2,
 	};
 
-	const vector<bivarInt> DOOR_TYPE_ODDS = {
-		{wood, 15},
-		{stone, 6},
-		{steel, 3},
-		{special, 1}
-	};
-
-	const vector<bivarInt> KEY_TYPE_ODDS = {
-		{stone, 6},
-		{steel, 3},
-		{special, 1}
-	};
-
 	const vector<bivarInt> ITEM_TYPE_ODDS = {
 		{key, 6},
 		{placeholder1, 0},
@@ -131,9 +129,9 @@ namespace constants {
 
 	const map<int, string> CONTROLS_DISPLAY = {
 		{0, "w"},
-		{1, "a"},
+		{1, "d"},
 		{2, "s"},
-		{3, "d"},
+		{3, "a"},
 		{4, "1"},
 		{5, "2"},
 		{6, "3"},
@@ -145,6 +143,18 @@ namespace constants {
 		basicEncounter = 0
 	};
 
+	const vector<bivarInt> ENCOUNTER_TYPE_ODDS = {
+		{basicEncounter, 1}
+	}; 
+	
+	const vector<bivarInt> ENCOUNTER_LEVEL_ODDS = {
+		{1, 10},
+		{2, 7},
+		{3, 3},
+		{4, 2},
+		{5, 1}
+	};
+
 	const map<ENCOUNTER_TYPE, encounterStats> ENCOUNTER_TYPE_STATS = {
 		{basicEncounter, {
 			1,
@@ -154,6 +164,13 @@ namespace constants {
 
 		}}
 	};
+};
+
+struct encounterSpawnData {
+	bool hasEncounter;
+	bool previousEncounter;
+	encounterStats previousStats;
+	constants::ENCOUNTER_TYPE encounterType;
 };
 
 //true if a.x == b.x && a.y = b.y

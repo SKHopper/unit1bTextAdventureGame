@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 
-#include "utilities.h"
 #include "DungeonRoom.h"
 
 //a point on a hypothetical 2D array of rooms, holding object and specifying indices
@@ -22,7 +21,7 @@ class Dungeon {
 public:
 	Dungeon();
 	//appends ref of new room to roomMap
-	void makeRoom(DungeonRoomSave knownRoomData, bivarInt coordinate);
+	DungeonRoom makeRoom(DungeonRoomSave knownRoomData, bivarInt coordinate);
 	//appends ref of new (0, 0) fully unlocked room to roomMap
 	void makeStartRoom();
 	
@@ -35,7 +34,7 @@ public:
 	//returns the sides of active rooms that would be the other sides of the sides of the room at specified coordinate
 	vector<DoorWall> getAdjacentSides(bivarInt coordinate);
 	//moves player coordinate by direction's unit vector and creates new room if necessary
-	void traverse(constants::DIRECTION direction);
+	encounterSpawnData& traverse(constants::DIRECTION direction);
 	//beware pass by ref
 	vector<int>& getMapExtents();
 };

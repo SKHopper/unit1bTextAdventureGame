@@ -1,7 +1,8 @@
 #include <iostream>
 
 #include "Dungeon.h"
-#include "player.h"
+#include "Player.h"
+#include "Encounter.h"
 
 void displayRoomOptions(Player playerCharacter) {
     cout << "Entre door: ";
@@ -32,6 +33,15 @@ int getPlayerInput() {
     return getPlayerInput();
 }
 
+void runEncounter(Player& playerCharacter, encounterSpawnData& spawnData) {
+    if (spawnData.previousEncounter) {
+        Encounter enemyEncounter(spawnData.encounterType, true, spawnData.previousStats);
+    }
+    else {
+        Encounter enemyEncounter();
+    }
+}
+
 void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int playerChoice) {
     clearTerminal();
     constants::DIRECTION direction = static_cast<constants::DIRECTION>(playerChoice);
@@ -52,7 +62,10 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
         }
     }
     if (entreSuccess) {
-        playerDungeon.traverse(direction);
+        encounterSpawnData& spawnData = playerDungeon.traverse(direction);
+        if (spawnData.hasEncounter) {
+            runEncounter(playerCharacter, spawnData);
+        }
     }
     else {
         if (side.getWallHasDoor()) {
@@ -95,7 +108,7 @@ void exposite(Dungeon playerDungeon, Player playerCharacter) {
 }
 
 void play() {
-    Player playerCharacter;
+    Player playerCharacter(20, 20);
     Dungeon playerDungeon;
     playerDungeon.makeStartRoom();
     while (true) {

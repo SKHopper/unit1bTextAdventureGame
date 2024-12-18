@@ -41,3 +41,7 @@ void DungeonRoom::exposit() {
 			<< ((i == 3) ? "." : ",\n");
 	}
 }
+
+encounterSpawnData& DungeonRoom::getEncounter() {
+	return roomSave.encounterData;
+}
