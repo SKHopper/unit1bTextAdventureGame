@@ -5,6 +5,7 @@
 #include <random>
 #include <cctype>
 #include <string>
+//#include <sqlite3.h>
 
 using std::map, std::vector, std::string, std::cout, std::cin, std::endl;
 
@@ -24,6 +25,20 @@ using std::map, std::vector, std::string, std::cout, std::cin, std::endl;
 struct bivarInt {
 	int x;
 	int y;
+};
+
+struct encounterStats {
+	int level;
+
+	double health; 
+	double lightAttackDmg; 
+	double heavyAttackDmg;
+	double heavyAttackChance;
+
+	string encounterDisplayName; 
+	string lightAttackDisplayMsg; 
+	string heavyAttackDisplayMsg;
+	string description;
 };
 
 namespace constants {
@@ -123,6 +138,21 @@ namespace constants {
 		{5, "2"},
 		{6, "3"},
 		{7, "4"}
+	};
+
+	const enum ENCOUNTER_TYPE {
+		nullEncounterType = -1,
+		basicEncounter = 0
+	};
+
+	const map<ENCOUNTER_TYPE, encounterStats> ENCOUNTER_TYPE_STATS = {
+		{basicEncounter, {
+			1,
+			3, 1, 4, (1/4),
+			"Rotted Golem", "swings at you with a twitching claw", "throws its crippled form at you",
+			"placeholder"
+
+		}}
 	};
 };
 

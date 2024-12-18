@@ -8,7 +8,9 @@
 //all generated data about a room to be saved 
 struct DungeonRoomSave {
 	std::vector<DoorWall> sides;
-	//TODO:
+	bool hasEncounter;
+	constants::ENCOUNTER_TYPE type;
+	int encounterLevel;
 };
 
 class DungeonRoom {

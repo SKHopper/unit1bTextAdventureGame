@@ -133,6 +133,7 @@
     <ClCompile Include="DungeonRoom.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Key.cpp" />
+    <ClCompile Include="Lifeform.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="unit1bGame.cpp" />
     <ClCompile Include="utilities.cpp" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="Item.h" />
     <ClInclude Include="Key.h" />
+    <ClInclude Include="Lifeform.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="DoorWall.h" />
