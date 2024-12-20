@@ -6,6 +6,7 @@
 
 void displayRoomOptions(Player playerCharacter) {
     cout << "Entre door: ";
+
     for (int i = 0; i < 4; i++) {
         cout
             << "["
@@ -20,14 +21,17 @@ void displayRoomOptions(Player playerCharacter) {
 
 int getPlayerInput() {
     cout << "Action: ";
+
     string playerInput;
     std::getline(cin, playerInput);
+
     if (playerInput.size() == 1) {
         playerInput = tolower(playerInput.at(0));
         if (constants::CONTROLS.count(playerInput)) {
             return constants::CONTROLS.at(playerInput);
         }
     }
+
     return getPlayerInput();
 }
 
@@ -40,29 +44,106 @@ void displayEncounterOptions(bool isEnemyTurn) {
     }
 }
 
-void runEncounter(Player& playerCharacter, encounterSpawnData spawnData) {
+bool playerTryEscape(Dungeon& playerDungeon) {
+    bool didSucceed = false;
+    if (randomWeightedBoolean(/*0.92*/0)) {
+        playerDungeon.escape();
+        didSucceed = true;
+    }
+    return didSucceed;
+}
+
+//based on .https://stackoverflow.com/a/21995693
+//pass in auto steady_clock::now();
+template <
+    class result_t = milliseconds,
+    class clock_t = steady_clock,
+    class duration_t = milliseconds
+> double getElapsedSeconds(
+    time_point <
+        clock_t, 
+        duration_t
+    > const& startTime
+) {
+    auto elapsedTime = duration_cast<result_t>(clock_t::now() - startTime);
+    auto elapsedMilliseconds = elapsedTime.count();
+    double elapsedSeconds = static_cast<double>(elapsedMilliseconds) / 1000;
+
+    return elapsedSeconds;
+}
+
+bool playerEncounterAct(bool isEnemyTurn, Player& playerCharacter, Encounter& enemyEncounter, Dungeon& playerDungeon) {
+    auto startTime = steady_clock::now();
+    bool encounterEnd = false;
+    int playerInput = 0;
+
+    while (playerInput < 4 || playerInput > 6) {
+        playerInput = getPlayerInput();
+    }
+
+    double elapsedSeconds = getElapsedSeconds(startTime);
+    double elapsedSecondsResultMultiplier = getElapsedSecondsResultMultiplier(elapsedSeconds);
+
+    switch (playerInput) {
+    case 4:
+        if (isEnemyTurn) {//dodge
+
+        }
+        else {//light attack
+
+        }
+        break;
+    case 5:
+        if (isEnemyTurn) {//block
+
+        }
+        else {//heavy attack
+
+        }
+        break;
+    case 6://escape
+        encounterEnd = playerTryEscape(playerDungeon);
+        break;
+    default://erroneous
+        break;
+    }
+
+    return encounterEnd;
+}
+
+void runEncounter(Player& playerCharacter, encounterSpawnData spawnData, Dungeon& playerDungeon) {
+
     Encounter enemyEncounter(spawnData.encounterType, not spawnData.previousEncounter, spawnData.previousStats);
+
     clearTerminal();
     enemyEncounter.exposite();
     cout << endl << endl;
-    int playerInput = 0;
+
     while (true) {
-        attack enemyAttack = enemyEncounter.attackPlayer();
+        Attack enemyAttack = enemyEncounter.attackPlayer();
         cout << endl;
         displayEncounterOptions(true);
-        while (playerInput < 4 || playerInput > 6) {
-            playerInput = getPlayerInput();
+        
+        cout << endl;
+        if (playerEncounterAct(true, playerCharacter, enemyEncounter, playerDungeon)) {
+            break;
         }
+        cout << endl;
         displayEncounterOptions(false);
+        if (playerEncounterAct(false, playerCharacter, enemyEncounter, playerDungeon)) {
+            break;
+        }
     }
 }
 
 void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int playerChoice) {
     clearTerminal();
+
     constants::DIRECTION direction = static_cast<constants::DIRECTION>(playerChoice);
     DoorWall& side = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate()).getSide(direction);
     vector<Item>& inventory = playerCharacter.getInventory();
     bool entreSuccess = side.getIsUnlocked();
+
     if (side.getWallHasDoor() && !entreSuccess) {//if wall is not just locked because no door
         for (int i = 0; i < inventory.size(); i++) {
             Item& RkeyProspect = inventory.at(i); 
@@ -78,27 +159,18 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
     }
     if (entreSuccess) {
         encounterSpawnData spawnData = playerDungeon.traverse(direction);
-        cout << "testentreSuccess" << spawnData.hasEncounter;
         if (spawnData.hasEncounter) {
-            runEncounter(playerCharacter, spawnData);
+            runEncounter(playerCharacter, spawnData, playerDungeon);
         }
     }
-    else {
+    else {//display traversal fail msg
         if (side.getWallHasDoor()) {
-            cout 
-                << "Your satchel does not contain the rune to open the " 
-                << constants::DIRECTION_DISPLAY_NAME.at(direction)
-                << " door";
+            cout << "Your satchel does not contain the rune to open the " << constants::DIRECTION_DISPLAY_NAME.at(direction) << " door";
         }
         else {
-            cout 
-                << "The wall to the "
-                << constants::DIRECTION_DISPLAY_NAME.at(direction)
-                << " is impassable";
+            cout << "The wall to the " << constants::DIRECTION_DISPLAY_NAME.at(direction) << " is impassable";
         }
-        cout 
-            << ", the path is blocked."
-            << endl;
+        cout << ", the path is blocked." << endl;
     }
 }
 
@@ -109,12 +181,12 @@ void playerAct(Dungeon& playerDungeon, Player& playerCharacter) {
     if (playerChoice < 4) {
         playerTryEntreDoor(playerDungeon, playerCharacter, playerChoice);
     }
+    //elseifs other choices
 }
 
 //call room and player to display refreshed info
 void exposite(Dungeon playerDungeon, Player playerCharacter) {
-    DungeonRoom playerRoom = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate());
-    playerRoom.exposit();
+    playerDungeon.getRoom(playerDungeon.getPlayerCoordinate()).exposit();
     cout << endl;
     playerCharacter.exposite();
     cout << endl;
@@ -125,7 +197,9 @@ void exposite(Dungeon playerDungeon, Player playerCharacter) {
 void play() {
     Player playerCharacter(20, 20);
     Dungeon playerDungeon;
+
     playerDungeon.makeStartRoom();
+
     while (true) {
         exposite(playerDungeon, playerCharacter);
         cout << endl;
@@ -139,5 +213,6 @@ void play() {
 int main() {
     //new seed per execute
     srand(time(0));
+
     play();
 }

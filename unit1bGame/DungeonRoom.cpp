@@ -24,6 +24,7 @@ void DungeonRoom::exposit() {
 		constants::DIRECTION sideDirection = static_cast<constants::DIRECTION>(i);
 		DoorWall tempSide = roomSave.sides.at(i);
 		string sideDisplayName;
+
 		if (tempSide.getWallHasDoor()) {
 			sideDisplayName = (tempSide.getIsUnlocked()) ? "an Unsealed" : "a Sealed";
 			sideDisplayName += " ";
@@ -33,6 +34,7 @@ void DungeonRoom::exposit() {
 		else {
 			sideDisplayName = "a Wall";
 		}
+
 		cout
 			<< ((i) ? "to the " : "To the ")
 			<< constants::DIRECTION_DISPLAY_NAME.at(sideDirection) 

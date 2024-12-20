@@ -14,13 +14,13 @@ bool Lifeform::updateHealth(double change) {
 
 void Lifeform::displayHealth() {
     cout << "Life: [";
-    for (int i = 0; i < health; i++) {
+    for (int i = 0; i < health; i++) {//fraction filled
         if (i) {
             cout << ".";
         }
         cout << "X";
     }
-    for (int i = 0; i < maxHealth - health; i++) {
+    for (int i = 0; i < maxHealth - health; i++) {//remainder empty
         cout << ". ";
     }
     cout << "]";

@@ -1,6 +1,6 @@
 #include "Encounter.h"
 
-attack Encounter::attackPlayer() {
+Attack Encounter::attackPlayer() {
 	bool isHeavy = randomWeightedBoolean(1 - stats.heavyAttackChance);
 	if (isHeavy) {
 		cout << "Heavy attack! The " << stats.encounterDisplayName << " " << stats.heavyAttackDisplayMsg;

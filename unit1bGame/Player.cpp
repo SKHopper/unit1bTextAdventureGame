@@ -13,33 +13,34 @@ void Player::appendInventory(Item newItem) {
 }
 
 void Player::exposite() {
+    vector<string> displayNames;    //one of each
+    vector<int> itemCounts;         //count per name
+
     int itemCount = inventory.size();
-    vector<string> displayNames;
-    vector<int> itemCounts;
-    if (itemCount) {
+    if (itemCount) {//unempty inventory
         cout << "In your satchel there is ";
         for (Item& thisItem : inventory) {
             string displayName = thisItem.getDisplayName();
             int index = linearStringSearch(displayNames, displayName);
-            if (index == -1) {
+            if (index == -1) {//new name
                 displayNames.push_back(displayName);
                 itemCounts.push_back(1);
             }
-            else {
+            else {//prelisted name
                 itemCounts.at(index)++;
             }
         }
         for (int i = 0; i < displayNames.size(); i++) {
             cout << itemCounts.at(i) << " " << displayNames.at(i);
-            if (itemCounts.at(i) > 1) {
+            if (itemCounts.at(i) > 1) {//plurality
                 cout << "s";
             }
-            if (i < displayNames.size() - 1) {
+            if (i < displayNames.size() - 1) {//comma listing
                 cout << ", ";
             }
         }
     }
-    else {
+    else {//empty inventory
         cout << "There is nothing in your satchel";
     }
 }

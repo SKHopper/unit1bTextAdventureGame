@@ -46,6 +46,7 @@ void DoorWall::generate(bool newHasDoor, constants::DOOR_TYPE newType){
     if (not isGenerated) {
         isGenerated = true;
         wallHasDoor = newHasDoor;
+
         if (wallHasDoor) {
             type = newType;
             isUnlocked = type == constants::wood;

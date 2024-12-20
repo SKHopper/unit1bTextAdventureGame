@@ -26,6 +26,7 @@ void clearTerminal() {
 string specialNameGenerator(int length){
     string name = "";
     int startShifter = randomInteger(1);
+
     for (int i = 0; i < length; i++) {
         name.append(
             ((startShifter) ? 1-(i % 2) : (i % 2)) 
@@ -33,22 +34,37 @@ string specialNameGenerator(int length){
             : constants::SPECIAL_VOWELS.at(randomInteger(constants::SPECIAL_VOWELS.size() - 1))
         );
     }
+
     char start = toupper(name.at(0));
     name.assign(name.begin()+1,name.end());
+
     return start + name;
 }
 
 int linearStringSearch(vector<string> arr, string a) {
     for (int i = 0; i < arr.size(); i++) {
         if (a == arr.at(i)) {
+            //index
             return i;
         }
     }
+
+    //fail
     return -1;
+}
+
+double getElapsedSecondsResultMultiplier(double elapsedSeconds) {
+    if (elapsedSeconds > constants::ALLOWED_INPUT_DELAY_SECONDS) {
+        elapsedSeconds = constants::ALLOWED_INPUT_DELAY_SECONDS;
+    }
+    double enumerator = constants::ALLOWED_INPUT_DELAY_SECONDS - elapsedSeconds;
+    double normalized = enumerator / constants::ALLOWED_INPUT_DELAY_SECONDS;
+    return  normalized + 1;
 }
 
 bivarInt getDirectionDisplacement(constants::DIRECTION direction) {
     bivarInt displacement{};
+
     switch (direction) {
     case constants::north:
         displacement = { 0, 1 };
@@ -65,6 +81,7 @@ bivarInt getDirectionDisplacement(constants::DIRECTION direction) {
     default:
         break;
     }
+
     return displacement;
 }
 
@@ -74,6 +91,7 @@ int selectFromOddsTable(vector<bivarInt> table) {
         oddsSum += tableElem.y;
     }
     int selector = rand() % oddsSum;
+
     oddsSum = 0;
     for (bivarInt& tableElem : table) {
         oddsSum += tableElem.y;
@@ -82,6 +100,7 @@ int selectFromOddsTable(vector<bivarInt> table) {
             break;
         }
     }
+
     return selector;
 }
 

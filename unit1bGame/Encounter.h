@@ -2,7 +2,8 @@
 
 #include "Lifeform.h"
 
-struct attack {
+//attack type and strength
+struct Attack {
 	bool isHeavy = false;
 	double dmg;
 };
@@ -25,6 +26,6 @@ public:
 			stats = constants::ENCOUNTER_TYPE_STATS.at(type);
 		}
 	};
-	attack attackPlayer();
+	Attack attackPlayer();
 	void exposite();
 };
