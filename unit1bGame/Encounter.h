@@ -2,12 +2,6 @@
 
 #include "Lifeform.h"
 
-//attack type and strength
-struct Attack {
-	bool isHeavy = false;
-	double dmg;
-};
-
 class Encounter : public Lifeform {
 	encounterStats stats = {};
 public:
@@ -28,4 +22,5 @@ public:
 	};
 	Attack attackPlayer();
 	void exposite();
+	string getDisplayName();
 };

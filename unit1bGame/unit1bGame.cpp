@@ -54,7 +54,7 @@ bool playerTryEscape(Dungeon& playerDungeon) {
 }
 
 //based on .https://stackoverflow.com/a/21995693
-//pass in auto steady_clock::now();
+//pass in auto steady_clock::now()
 template <
     class result_t = milliseconds,
     class clock_t = steady_clock,
@@ -72,7 +72,19 @@ template <
     return elapsedSeconds;
 }
 
-bool playerEncounterAct(bool isEnemyTurn, Player& playerCharacter, Encounter& enemyEncounter, Dungeon& playerDungeon) {
+//TODO: replace with some lib func
+void pause(double pauseDurationSeconds) {
+    auto startTime = steady_clock::now();
+    while (getElapsedSeconds(startTime) < pauseDurationSeconds) {}
+}
+
+bool playerEncounterAct(
+    Player& playerCharacter, 
+    Encounter& enemyEncounter, 
+    Dungeon& playerDungeon,
+    bool isEnemyTurn = false,
+    Attack enemyAttack = {false, 0}
+) {
     auto startTime = steady_clock::now();
     bool encounterEnd = false;
     int playerInput = 0;
@@ -87,15 +99,19 @@ bool playerEncounterAct(bool isEnemyTurn, Player& playerCharacter, Encounter& en
     switch (playerInput) {
     case 4:
         if (isEnemyTurn) {//dodge
-
+            if (randomWeightedBoolean(0.5 * elapsedSecondsResultMultiplier)) {
+                enemyAttack.dmg = 0;
+            }
         }
         else {//light attack
-
+            
         }
         break;
     case 5:
         if (isEnemyTurn) {//block
-
+            if (randomWeightedBoolean(((enemyAttack.isHeavy) ? 0.2 : 1.2) * elapsedSecondsResultMultiplier)) {
+                enemyAttack.dmg *= 0.1;
+            }
         }
         else {//heavy attack
 
@@ -107,6 +123,8 @@ bool playerEncounterAct(bool isEnemyTurn, Player& playerCharacter, Encounter& en
     default://erroneous
         break;
     }
+    
+    playerCharacter.updateHealth(enemyAttack.dmg);
 
     return encounterEnd;
 }
@@ -114,25 +132,47 @@ bool playerEncounterAct(bool isEnemyTurn, Player& playerCharacter, Encounter& en
 void runEncounter(Player& playerCharacter, encounterSpawnData spawnData, Dungeon& playerDungeon) {
 
     Encounter enemyEncounter(spawnData.encounterType, not spawnData.previousEncounter, spawnData.previousStats);
-
     clearTerminal();
     enemyEncounter.exposite();
-    cout << endl << endl;
+    pause(3);
 
-    while (true) {
+    while (true) {//combat turn loop
+        clearTerminal();
+        enemyEncounter.exposite();
+        cout << endl << endl;
+        playerCharacter.displayHealth();
+        cout << endl << endl;
         Attack enemyAttack = enemyEncounter.attackPlayer();
-        cout << endl;
+        cout << endl << endl;
         displayEncounterOptions(true);
         
         cout << endl;
-        if (playerEncounterAct(true, playerCharacter, enemyEncounter, playerDungeon)) {
+        if (playerEncounterAct(playerCharacter, enemyEncounter, playerDungeon, true, enemyAttack)) {
             break;
         }
-        cout << endl;
+        clearTerminal();
+        enemyEncounter.exposite();
+        cout << endl << endl;
+        playerCharacter.displayHealth();
+        cout << endl << endl;
         displayEncounterOptions(false);
-        if (playerEncounterAct(false, playerCharacter, enemyEncounter, playerDungeon)) {
+        if (playerEncounterAct(playerCharacter, enemyEncounter, playerDungeon)) {
             break;
         }
+    }
+
+    clearTerminal();
+
+    if (playerCharacter.getHealth()) {
+        if (enemyEncounter.getHealth()) {//player escaped encounter
+            cout << "Escaped the " << enemyEncounter.getDisplayName() << ", I'm headed to the last room." << endl;
+        }
+        else {//player killed encounter
+            
+        }
+    }
+    else {//encounter killed player
+
     }
 }
 
@@ -150,7 +190,7 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
             if (RkeyProspect.getType() == constants::key) {
                 entreSuccess = side.tryUnlock((*static_cast<Key*>(&RkeyProspect)).getKeyType());
                 if (entreSuccess) {
-                    cout << "You used one " + RkeyProspect.getDisplayName() << ", \n";
+                    cout << "I used one " + RkeyProspect.getDisplayName() << ", \n";
                     inventory.erase(inventory.begin() + i);
                     break;
                 }
@@ -165,7 +205,7 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
     }
     else {//display traversal fail msg
         if (side.getWallHasDoor()) {
-            cout << "Your satchel does not contain the rune to open the " << constants::DIRECTION_DISPLAY_NAME.at(direction) << " door";
+            cout << "My satchel does not contain the rune to open the " << constants::DIRECTION_DISPLAY_NAME.at(direction) << " door";
         }
         else {
             cout << "The wall to the " << constants::DIRECTION_DISPLAY_NAME.at(direction) << " is impassable";

@@ -168,19 +168,23 @@ namespace constants {
 
 	//for loot table
 	const vector<bivarInt> ENCOUNTER_LEVEL_ODDS = {
-		{1, 10},
-		{2, 7},
-		{3, 3},
-		{4, 2},
-		{5, 1}
+		{1, 6},
+		{2, 4},
+		{3, 2}
+	};
+
+	const map<int, string> ENCOUNTER_LEVEL_DISPLAY_NAME = {
+		{1, "Meak"},
+		{2, "Menacing"},
+		{3, "Berserk"}
 	};
 
 	//for encounter instance construction on new spawn
 	const map<ENCOUNTER_TYPE, encounterStats> ENCOUNTER_TYPE_STATS = {
 		{basicEncounter, {
 			1,
-			3, 1, 4, (1/4),
-			"Rotted Golem", "swings at you with a twitching claw", "throws its crippled form at you.",
+			3, -1, -4, (1/4),
+			"Rotted Golem", "swings at me with a twitching claw.", "throws its crippled form at me.",
 			"placeholder-description"
 
 		}}
@@ -188,6 +192,12 @@ namespace constants {
 
 	//seconds from perfect to fail player input
 	const double ALLOWED_INPUT_DELAY_SECONDS = 3;
+};
+
+//attack type and strength
+struct Attack {
+	bool isHeavy = false;
+	double dmg;
 };
 
 //data for dungeon rooms to handle encountering on traverse in

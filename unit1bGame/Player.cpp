@@ -18,7 +18,7 @@ void Player::exposite() {
 
     int itemCount = inventory.size();
     if (itemCount) {//unempty inventory
-        cout << "In your satchel there is ";
+        cout << "In my satchel there is ";
         for (Item& thisItem : inventory) {
             string displayName = thisItem.getDisplayName();
             int index = linearStringSearch(displayNames, displayName);
@@ -41,7 +41,7 @@ void Player::exposite() {
         }
     }
     else {//empty inventory
-        cout << "There is nothing in your satchel";
+        cout << "There is nothing in my satchel";
     }
 }
 

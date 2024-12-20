@@ -12,6 +12,10 @@ Attack Encounter::attackPlayer() {
 }
 
 void Encounter::exposite() {
-	cout << "There's a " << stats.encounterDisplayName << " in this chamber!" << endl;
+	cout << "There's a " << getDisplayName() << " in this chamber!" << endl;
 	cout << stats.description << endl;
+}
+
+string Encounter::getDisplayName() {
+	return constants::ENCOUNTER_LEVEL_DISPLAY_NAME.at(stats.level) + " " + stats.encounterDisplayName;
 }

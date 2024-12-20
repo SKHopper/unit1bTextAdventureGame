@@ -9,4 +9,5 @@ public:
 	Lifeform(double newMaxHealth, double newHealth) : maxHealth(newMaxHealth), health(newHealth) {};
 	bool updateHealth(double change);
 	void displayHealth();
+	double getHealth();
 };

@@ -113,7 +113,7 @@ encounterSpawnData Dungeon::traverse(constants::DIRECTION direction) {
     DungeonRoom& RnewRoom = newRoom;
 
     if (getRoomIndex(playerCoordinate) == -1) {//if no room exists
-        bool hasEncounter = randomWeightedBoolean( /*0.85*/ /*0*/ 1 );
+        bool hasEncounter = randomWeightedBoolean( /*0.85*/ 0 );
         RnewRoom = makeRoom(
             {
                 getAdjacentSides(playerCoordinate),

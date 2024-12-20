@@ -25,3 +25,7 @@ void Lifeform::displayHealth() {
     }
     cout << "]";
 }
+
+double Lifeform::getHealth() {
+    return health;
+}

@@ -59,7 +59,7 @@ double getElapsedSecondsResultMultiplier(double elapsedSeconds) {
     }
     double enumerator = constants::ALLOWED_INPUT_DELAY_SECONDS - elapsedSeconds;
     double normalized = enumerator / constants::ALLOWED_INPUT_DELAY_SECONDS;
-    return  normalized + 1;
+    return  normalized + 0.5;
 }
 
 bivarInt getDirectionDisplacement(constants::DIRECTION direction) {
