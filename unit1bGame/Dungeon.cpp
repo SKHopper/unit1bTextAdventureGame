@@ -95,14 +95,14 @@ vector<DoorWall> Dungeon::getAdjacentSides(bivarInt coordinate){ //TODO MAYBE: c
     return sides;
 }
 
-encounterSpawnData& Dungeon::traverse(constants::DIRECTION direction) {
+encounterSpawnData Dungeon::traverse(constants::DIRECTION direction) {
     DungeonRoom newRoom;
     DungeonRoom& RnewRoom = newRoom;
     cout << "Headed " << constants::DIRECTION_DISPLAY_NAME.at(direction) << ", ";
     getRoom(playerCoordinate).getSide(direction).setIsUnlocked(true);
     playerCoordinate = sumBivariateIntegers(playerCoordinate, getDirectionDisplacement(direction));
     if (getRoomIndex(playerCoordinate) == -1) {//if no room exists
-        bool hasEncounter = randomWeightedBoolean(0.85);
+        bool hasEncounter = randomWeightedBoolean(/*0.85*/0);
         DungeonRoomSave newRoomSave = {
             getAdjacentSides(playerCoordinate),
             {
@@ -119,8 +119,6 @@ encounterSpawnData& Dungeon::traverse(constants::DIRECTION direction) {
     }
     else {//unlock corresponding other side of door
         RnewRoom = getRoom(playerCoordinate);
-
-        cout << "4";
         RnewRoom.getSide(constants::DIRECTION_OPPOSITE.at(direction)).setIsUnlocked(true);
         cout << "you've been in this chamber before.\n";
     }

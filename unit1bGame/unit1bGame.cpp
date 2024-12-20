@@ -16,12 +16,10 @@ void displayRoomOptions(Player playerCharacter) {
             cout << ", ";
         }
     }
-    cout << endl;
-    cout << endl;
 }
 
 int getPlayerInput() {
-    cout << "Your choice: ";
+    cout << "Action: ";
     string playerInput;
     std::getline(cin, playerInput);
     if (playerInput.size() == 1) {
@@ -33,12 +31,29 @@ int getPlayerInput() {
     return getPlayerInput();
 }
 
-void runEncounter(Player& playerCharacter, encounterSpawnData& spawnData) {
-    if (spawnData.previousEncounter) {
-        Encounter enemyEncounter(spawnData.encounterType, true, spawnData.previousStats);
+void displayEncounterOptions(bool isEnemyTurn) {
+    if (isEnemyTurn) {
+        cout << "React: [1]dodge, [2]block, [3]escape";
     }
     else {
-        Encounter enemyEncounter();
+        cout << "Act: [1]light attack, [2]heavy attack, [3]escape";
+    }
+}
+
+void runEncounter(Player& playerCharacter, encounterSpawnData spawnData) {
+    Encounter enemyEncounter(spawnData.encounterType, not spawnData.previousEncounter, spawnData.previousStats);
+    clearTerminal();
+    enemyEncounter.exposite();
+    cout << endl << endl;
+    int playerInput = 0;
+    while (true) {
+        attack enemyAttack = enemyEncounter.attackPlayer();
+        cout << endl;
+        displayEncounterOptions(true);
+        while (playerInput < 4 || playerInput > 6) {
+            playerInput = getPlayerInput();
+        }
+        displayEncounterOptions(false);
     }
 }
 
@@ -62,7 +77,8 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
         }
     }
     if (entreSuccess) {
-        encounterSpawnData& spawnData = playerDungeon.traverse(direction);
+        encounterSpawnData spawnData = playerDungeon.traverse(direction);
+        cout << "testentreSuccess" << spawnData.hasEncounter;
         if (spawnData.hasEncounter) {
             runEncounter(playerCharacter, spawnData);
         }
@@ -104,7 +120,6 @@ void exposite(Dungeon playerDungeon, Player playerCharacter) {
     cout << endl;
     cout << endl;
     playerDungeon.displayMap();
-    cout << endl;
 }
 
 void play() {
@@ -113,7 +128,10 @@ void play() {
     playerDungeon.makeStartRoom();
     while (true) {
         exposite(playerDungeon, playerCharacter);
+        cout << endl;
         displayRoomOptions(playerCharacter);
+        cout << endl;
+        cout << endl;
         playerAct(playerDungeon, playerCharacter);
     }
 }

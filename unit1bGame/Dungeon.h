@@ -34,7 +34,7 @@ public:
 	//returns the sides of active rooms that would be the other sides of the sides of the room at specified coordinate
 	vector<DoorWall> getAdjacentSides(bivarInt coordinate);
 	//moves player coordinate by direction's unit vector and creates new room if necessary
-	encounterSpawnData& traverse(constants::DIRECTION direction);
+	encounterSpawnData traverse(constants::DIRECTION direction);
 	//beware pass by ref
 	vector<int>& getMapExtents();
 };

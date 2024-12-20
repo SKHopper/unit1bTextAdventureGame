@@ -20,5 +20,5 @@ public:
 	void Generate(DungeonRoomSave save);
 	//displays state of each side
 	void exposit();
-	encounterSpawnData& getEncounter();
+	encounterSpawnData getEncounter();
 };

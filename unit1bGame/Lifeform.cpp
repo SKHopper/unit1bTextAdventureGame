@@ -11,3 +11,17 @@ bool Lifeform::updateHealth(double change) {
     }
     return health;
 }
+
+void Lifeform::displayHealth() {
+    cout << "Life: [";
+    for (int i = 0; i < health; i++) {
+        if (i) {
+            cout << ".";
+        }
+        cout << "X";
+    }
+    for (int i = 0; i < maxHealth - health; i++) {
+        cout << ". ";
+    }
+    cout << "]";
+}

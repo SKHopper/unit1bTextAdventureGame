@@ -42,6 +42,6 @@ void DungeonRoom::exposit() {
 	}
 }
 
-encounterSpawnData& DungeonRoom::getEncounter() {
+encounterSpawnData DungeonRoom::getEncounter() {
 	return roomSave.encounterData;
 }

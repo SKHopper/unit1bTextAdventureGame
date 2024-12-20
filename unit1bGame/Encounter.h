@@ -3,7 +3,7 @@
 #include "Lifeform.h"
 
 struct attack {
-	bool isHeavy;
+	bool isHeavy = false;
 	double dmg;
 };
 
@@ -15,11 +15,16 @@ public:
 		bool newSpawn, 
 		encounterStats overrideStats = {}
 	) : 
-		stats((newSpawn) ? constants::ENCOUNTER_TYPE_STATS.at(type) : overrideStats), 
+		stats(overrideStats), 
 		Lifeform(
 			(newSpawn) ? constants::ENCOUNTER_TYPE_STATS.at(type).maxHealth : overrideStats.maxHealth, 
 			(newSpawn) ? constants::ENCOUNTER_TYPE_STATS.at(type).maxHealth : overrideStats.maxHealth
 		)
-	{};
+	{
+		if (newSpawn) {
+			stats = constants::ENCOUNTER_TYPE_STATS.at(type);
+		}
+	};
 	attack attackPlayer();
+	void exposite();
 };

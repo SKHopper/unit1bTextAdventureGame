@@ -160,7 +160,7 @@ namespace constants {
 			1,
 			3, 1, 4, (1/4),
 			"Rotted Golem", "swings at you with a twitching claw", "throws its crippled form at you",
-			"placeholder"
+			"placeholder-description"
 
 		}}
 	};

@@ -10,3 +10,8 @@ attack Encounter::attackPlayer() {
 	}
 	return {isHeavy, (isHeavy) ? stats.heavyAttackDmg : stats.lightAttackDmg};
 }
+
+void Encounter::exposite() {
+	cout << "There's a " << stats.encounterDisplayName << " in this chamber!" << endl;
+	cout << stats.description << endl;
+}
