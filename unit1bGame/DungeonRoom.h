@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "DoorWall.h"
+#include "Item.h"
 
 //all generated data about a room to be saved 
 struct DungeonRoomSave {
@@ -21,4 +22,5 @@ public:
 	//displays state of each side
 	void exposit();
 	encounterSpawnData getEncounter();
+	Item killEncounter();
 };

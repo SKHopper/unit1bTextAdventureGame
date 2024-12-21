@@ -13,7 +13,7 @@ DoorWall& DungeonRoom::getSide(constants::DIRECTION direction){
 void DungeonRoom::Generate(DungeonRoomSave save){
 	for (DoorWall& Rside : save.sides) {
 		if (not Rside.getIsGenerated()) {
-			Rside.generate(randomWeightedBoolean(0.15), static_cast<constants::DOOR_TYPE>(selectFromOddsTable(constants::DOOR_TYPE_ODDS)));
+			Rside.generate(randomWeightedBoolean(1 - WALL_HAS_DOOR_CHANCE), static_cast<constants::DOOR_TYPE>(selectFromOddsTable(constants::DOOR_TYPE_ODDS)));
 		}
 	}
 	roomSave = save;
@@ -46,4 +46,9 @@ void DungeonRoom::exposit() {
 
 encounterSpawnData DungeonRoom::getEncounter() {
 	return roomSave.encounterData;
+}
+
+Item DungeonRoom::killEncounter() {
+	roomSave.encounterData.hasEncounter = false;
+	return Item();
 }

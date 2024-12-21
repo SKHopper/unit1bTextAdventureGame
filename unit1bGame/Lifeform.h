@@ -10,4 +10,5 @@ public:
 	bool updateHealth(double change);
 	void displayHealth();
 	double getHealth();
+	void setHealth(double newHealth);
 };

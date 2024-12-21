@@ -45,3 +45,7 @@ void Player::exposite() {
     }
 }
 
+void Player::die() {
+    setHealth(BASE_PLAYER_MAX_HEALTH / 2);
+}
+

@@ -27,6 +27,7 @@ public:
 	void makeStartRoom();
 	
 	bivarInt getPlayerCoordinate();	
+	void setPlayerCoordinate(bivarInt newCoordinate);
 	vector<roomMapPoint> getRoomMap();
 	void displayMap();
 	int getRoomIndex(bivarInt coordinate);

@@ -17,4 +17,5 @@ public:
 	void appendInventory(Item newItem);
 	//displays inventory
 	void exposite();
+	void die();
 };

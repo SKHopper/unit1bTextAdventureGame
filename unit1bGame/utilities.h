@@ -6,26 +6,33 @@
 #include <cctype>
 #include <string>
 #include <chrono>
-//#include <sqlite3.h>
+
+#define WALL_HAS_DOOR_CHANCE 0.85
+
+#define BASE_ESCAPE_CHANCE 0.08
+
+#define BASE_DODGE_CHANCE 0.5
+#define DODGED_ATTACK_DAMAGE 0.0
+
+#define BASE_LIGHT_BLOCK_CHANCE 0.2
+#define BASE_HEAVY_BLOCK_CHANCE 0.8
+#define BASE_BLOCK_DAMAGE_MULTIPLIER 0.1
+
+#define BASE_PLAYER_LIGHT_ATTACK_DMG -2.0
+#define BASE_PLAYER_HEAVY_ATTACK_DMG -4.0
+
+#define PLAYER_ALLOWED_INPUT_SECS 3.0
+
+#define BASE_PLAYER_MAX_HEALTH 20.0
 
 using
-	std::map, 
-	std::vector, 
-	std::string, 
-	std::cout, 
-	std::cin, 
+	std::map,
+	std::vector,
+	std::string,
+	std::cout,
+	std::cin,
 	std::endl;
 using namespace std::chrono;
-
-/*
-* DOWNWARD CASTING - only allows polymorphic instance data but does allow nonpolymorphic functionality
-* 
-* //implicit cast up
-* Base& Rbase = *new Derived();
-* 
-* //explicit cast down
-* Derived& Rderived = *static_cast<Derived*>(&Rbase);
-*/
 
 //{x, y}
 struct bivarInt {
@@ -181,22 +188,20 @@ namespace constants {
 
 	//for encounter instance construction on new spawn
 	const map<ENCOUNTER_TYPE, encounterStats> ENCOUNTER_TYPE_STATS = {
-		{basicEncounter, {
-			1,
-			3, -1, -4, (1/4),
-			"Rotted Golem", "swings at me with a twitching claw.", "throws its crippled form at me.",
-			"placeholder-description"
-
-		}}
+		{
+			basicEncounter, 
+			{
+				1,
+				3, -1, -4, 0.25,
+				"Rotted Golem", "swings at me with a twitching claw.", "throws its crippled form at me.", "placeholder-description"
+			}
+		}
 	};
-
-	//seconds from perfect to fail player input
-	const double ALLOWED_INPUT_DELAY_SECONDS = 3;
 };
 
 //attack type and strength
-struct Attack {
-	bool isHeavy = false;
+const struct Attack {
+	bool isHeavy;
 	double dmg;
 };
 

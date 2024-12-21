@@ -54,12 +54,8 @@ int linearStringSearch(vector<string> arr, string a) {
 }
 
 double getElapsedSecondsResultMultiplier(double elapsedSeconds) {
-    if (elapsedSeconds > constants::ALLOWED_INPUT_DELAY_SECONDS) {
-        elapsedSeconds = constants::ALLOWED_INPUT_DELAY_SECONDS;
-    }
-    double enumerator = constants::ALLOWED_INPUT_DELAY_SECONDS - elapsedSeconds;
-    double normalized = enumerator / constants::ALLOWED_INPUT_DELAY_SECONDS;
-    return  normalized + 0.5;
+    double normalizedShiftedMultiplier = ((elapsedSeconds > PLAYER_ALLOWED_INPUT_SECS) ? 0 : PLAYER_ALLOWED_INPUT_SECS - elapsedSeconds) / PLAYER_ALLOWED_INPUT_SECS;
+    return (normalizedShiftedMultiplier) ? normalizedShiftedMultiplier += 0.5 : 0;
 }
 
 bivarInt getDirectionDisplacement(constants::DIRECTION direction) {

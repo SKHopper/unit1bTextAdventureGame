@@ -8,6 +8,10 @@ bivarInt Dungeon::getPlayerCoordinate() {
     return playerCoordinate;
 }
 
+void Dungeon::setPlayerCoordinate(bivarInt newCoordinate) {
+    playerCoordinate = newCoordinate;
+}
+
 vector<roomMapPoint> Dungeon::getRoomMap(){
     return roomMap;
 }

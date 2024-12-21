@@ -4,7 +4,7 @@
 #include "Player.h"
 #include "Encounter.h"
 
-void displayRoomOptions(Player playerCharacter) {
+void displayRoomOptions(Player& RplayerCharacter) {
     cout << "Entre door: ";
 
     for (int i = 0; i < 4; i++) {
@@ -46,7 +46,7 @@ void displayEncounterOptions(bool isEnemyTurn) {
 
 bool playerTryEscape(Dungeon& playerDungeon) {
     bool didSucceed = false;
-    if (randomWeightedBoolean(/*0.92*/0)) {
+    if (randomWeightedBoolean(1 - BASE_ESCAPE_CHANCE)) {
         playerDungeon.escape();
         didSucceed = true;
     }
@@ -78,16 +78,24 @@ void pause(double pauseDurationSeconds) {
     while (getElapsedSeconds(startTime) < pauseDurationSeconds) {}
 }
 
+void displayCombatMsg(string combatMsg) {
+    clearTerminal();
+    cout << combatMsg;
+    pause(1.4);
+}
+
 bool playerEncounterAct(
-    Player& playerCharacter, 
-    Encounter& enemyEncounter, 
-    Dungeon& playerDungeon,
+    Player& RplayerCharacter, 
+    Encounter& RenemyEncounter, 
+    Dungeon& RplayerDungeon,
     bool isEnemyTurn = false,
     Attack enemyAttack = {false, 0}
 ) {
     auto startTime = steady_clock::now();
     bool encounterEnd = false;
     int playerInput = 0;
+    Attack playerAttack = {false, 0};
+    string resultMsg = "";
 
     while (playerInput < 4 || playerInput > 6) {
         playerInput = getPlayerInput();
@@ -99,96 +107,128 @@ bool playerEncounterAct(
     switch (playerInput) {
     case 4:
         if (isEnemyTurn) {//dodge
-            if (randomWeightedBoolean(0.5 * elapsedSecondsResultMultiplier)) {
-                enemyAttack.dmg = 0;
+            resultMsg = "Failed to dodge!";
+            if (randomWeightedBoolean(1 - BASE_DODGE_CHANCE * elapsedSecondsResultMultiplier)) {
+                enemyAttack.dmg = DODGED_ATTACK_DAMAGE;
+                resultMsg = "Dodge succesful!";
             }
         }
         else {//light attack
-            
+            playerAttack = {false, BASE_PLAYER_LIGHT_ATTACK_DMG * elapsedSecondsResultMultiplier};
+            resultMsg = (playerAttack.dmg) ? "Direct hit!" : "Too slow!";
         }
         break;
     case 5:
         if (isEnemyTurn) {//block
-            if (randomWeightedBoolean(((enemyAttack.isHeavy) ? 0.2 : 1.2) * elapsedSecondsResultMultiplier)) {
-                enemyAttack.dmg *= 0.1;
+            resultMsg = "Failed to block!";
+            if (randomWeightedBoolean(1 - ((enemyAttack.isHeavy) ? BASE_HEAVY_BLOCK_CHANCE : BASE_LIGHT_BLOCK_CHANCE) * elapsedSecondsResultMultiplier)) {
+                enemyAttack.dmg *= BASE_BLOCK_DAMAGE_MULTIPLIER;
+                resultMsg = "Block succesful!";
             }
         }
         else {//heavy attack
-
+            playerAttack = {true, BASE_PLAYER_HEAVY_ATTACK_DMG * elapsedSecondsResultMultiplier};
+            resultMsg = (playerAttack.dmg) ? "Direct hit!" : "Too slow!";
         }
         break;
     case 6://escape
-        encounterEnd = playerTryEscape(playerDungeon);
+        encounterEnd = playerTryEscape(RplayerDungeon);
+        resultMsg = (encounterEnd) ? "Escaped!" : "Failed to escape";
         break;
     default://erroneous
         break;
     }
     
-    playerCharacter.updateHealth(enemyAttack.dmg);
+    if (not encounterEnd) {//not escaped
+        if (isEnemyTurn) {
+            encounterEnd = not RplayerCharacter.updateHealth(enemyAttack.dmg);
+        }
+        else {
+            encounterEnd = not RenemyEncounter.updateHealth(playerAttack.dmg);
+        }
+    }
 
+    displayCombatMsg(resultMsg);
     return encounterEnd;
 }
 
-void runEncounter(Player& playerCharacter, encounterSpawnData spawnData, Dungeon& playerDungeon) {
+Attack combatExposite(Player& RplayerCharacter, Encounter& RenemyEncounter, bool isEnemyTurn = false) {
+    Attack enemyAttack = {false, 0};
+    clearTerminal();
 
+    RplayerCharacter.displayHealth();
+    cout << endl << endl;
+
+    RenemyEncounter.exposite();           cout << RenemyEncounter.getHealth();
+    cout << endl << endl;
+
+    if (isEnemyTurn) {
+        enemyAttack = RenemyEncounter.attackPlayer();
+    }
+    cout << endl << endl;
+
+    displayEncounterOptions(isEnemyTurn);
+    cout << endl;
+
+    return enemyAttack;
+}
+
+void killPlayer(Player& RplayerCharacter, Dungeon& RplayerDungeon) {
+    RplayerDungeon.setPlayerCoordinate({0, 0});
+    RplayerCharacter.die();
+    clearTerminal();
+    cout << "Out of life, escaped to my Return Rune.";
+    pause(1.7);
+};
+
+void runEncounter(Player& RplayerCharacter, encounterSpawnData spawnData, Dungeon& RplayerDungeon) {
+    DungeonRoom& RencounterRoom = RplayerDungeon.getRoom(RplayerDungeon.getPlayerCoordinate());
     Encounter enemyEncounter(spawnData.encounterType, not spawnData.previousEncounter, spawnData.previousStats);
+    Attack enemyAttack;
     clearTerminal();
     enemyEncounter.exposite();
     pause(3);
 
     while (true) {//combat turn loop
-        clearTerminal();
-        enemyEncounter.exposite();
-        cout << endl << endl;
-        playerCharacter.displayHealth();
-        cout << endl << endl;
-        Attack enemyAttack = enemyEncounter.attackPlayer();
-        cout << endl << endl;
-        displayEncounterOptions(true);
-        
-        cout << endl;
-        if (playerEncounterAct(playerCharacter, enemyEncounter, playerDungeon, true, enemyAttack)) {
+        enemyAttack = combatExposite(RplayerCharacter, enemyEncounter,true);
+        if (playerEncounterAct(RplayerCharacter, enemyEncounter, RplayerDungeon, true, enemyAttack)) {
             break;
         }
-        clearTerminal();
-        enemyEncounter.exposite();
-        cout << endl << endl;
-        playerCharacter.displayHealth();
-        cout << endl << endl;
-        displayEncounterOptions(false);
-        if (playerEncounterAct(playerCharacter, enemyEncounter, playerDungeon)) {
+
+        combatExposite(RplayerCharacter, enemyEncounter);
+        if (playerEncounterAct(RplayerCharacter, enemyEncounter, RplayerDungeon)) {
             break;
         }
     }
 
     clearTerminal();
 
-    if (playerCharacter.getHealth()) {
+    if (RplayerCharacter.getHealth()) {
         if (enemyEncounter.getHealth()) {//player escaped encounter
-            cout << "Escaped the " << enemyEncounter.getDisplayName() << ", I'm headed to the last room." << endl;
+            cout << "Escaped the " << enemyEncounter.getDisplayName() << ", I'm headed back to the last room." << endl;
         }
         else {//player killed encounter
-            
+            RencounterRoom.killEncounter();
         }
     }
     else {//encounter killed player
-
+        killPlayer(RplayerCharacter, RplayerDungeon);
     }
 }
 
-void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int playerChoice) {
+void playerTryEntreDoor(Dungeon& RplayerDungeon, Player& RplayerCharacter, int playerChoice) {
     clearTerminal();
 
     constants::DIRECTION direction = static_cast<constants::DIRECTION>(playerChoice);
-    DoorWall& side = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate()).getSide(direction);
-    vector<Item>& inventory = playerCharacter.getInventory();
-    bool entreSuccess = side.getIsUnlocked();
+    DoorWall& Rside = RplayerDungeon.getRoom(RplayerDungeon.getPlayerCoordinate()).getSide(direction);
+    vector<Item>& inventory = RplayerCharacter.getInventory();
+    bool entreSuccess = Rside.getIsUnlocked();
 
-    if (side.getWallHasDoor() && !entreSuccess) {//if wall is not just locked because no door
+    if (Rside.getWallHasDoor() && !entreSuccess) {//if wall is not just locked because no door
         for (int i = 0; i < inventory.size(); i++) {
             Item& RkeyProspect = inventory.at(i); 
             if (RkeyProspect.getType() == constants::key) {
-                entreSuccess = side.tryUnlock((*static_cast<Key*>(&RkeyProspect)).getKeyType());
+                entreSuccess = Rside.tryUnlock((*static_cast<Key*>(&RkeyProspect)).getKeyType());
                 if (entreSuccess) {
                     cout << "I used one " + RkeyProspect.getDisplayName() << ", \n";
                     inventory.erase(inventory.begin() + i);
@@ -198,13 +238,13 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
         }
     }
     if (entreSuccess) {
-        encounterSpawnData spawnData = playerDungeon.traverse(direction);
+        encounterSpawnData spawnData = RplayerDungeon.traverse(direction);
         if (spawnData.hasEncounter) {
-            runEncounter(playerCharacter, spawnData, playerDungeon);
+            runEncounter(RplayerCharacter, spawnData, RplayerDungeon);
         }
     }
     else {//display traversal fail msg
-        if (side.getWallHasDoor()) {
+        if (Rside.getWallHasDoor()) {
             cout << "My satchel does not contain the rune to open the " << constants::DIRECTION_DISPLAY_NAME.at(direction) << " door";
         }
         else {
@@ -214,28 +254,27 @@ void playerTryEntreDoor(Dungeon& playerDungeon, Player& playerCharacter, int pla
     }
 }
 
-void playerAct(Dungeon& playerDungeon, Player& playerCharacter) {
-    DungeonRoom& playerRoom = playerDungeon.getRoom(playerDungeon.getPlayerCoordinate());
+void playerAct(Dungeon& RplayerDungeon, Player& RplayerCharacter) {
     int playerChoice = getPlayerInput();
     clearTerminal();
     if (playerChoice < 4) {
-        playerTryEntreDoor(playerDungeon, playerCharacter, playerChoice);
+        playerTryEntreDoor(RplayerDungeon, RplayerCharacter, playerChoice);
     }
-    //elseifs other choices
+    //TODO: elseifs other choices
 }
 
 //call room and player to display refreshed info
-void exposite(Dungeon playerDungeon, Player playerCharacter) {
-    playerDungeon.getRoom(playerDungeon.getPlayerCoordinate()).exposit();
+void exposite(Dungeon& RplayerDungeon, Player& RplayerCharacter) {
+    RplayerDungeon.getRoom(RplayerDungeon.getPlayerCoordinate()).exposit();
     cout << endl;
-    playerCharacter.exposite();
+    RplayerCharacter.exposite();
     cout << endl;
     cout << endl;
-    playerDungeon.displayMap();
+    RplayerDungeon.displayMap();
 }
 
 void play() {
-    Player playerCharacter(20, 20);
+    Player playerCharacter(BASE_PLAYER_MAX_HEALTH, BASE_PLAYER_MAX_HEALTH);
     Dungeon playerDungeon;
 
     playerDungeon.makeStartRoom();
